@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 // Initialize Gemini (using environment variable or placeholder for now)
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-live-preview" });
 
 export async function POST(req: Request) {
   try {

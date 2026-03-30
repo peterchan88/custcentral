@@ -8,13 +8,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Loader2, Send } from "lucide-react";
+import { Loader2, Send, Calendar } from "lucide-react";
 
 export default function IngestPage() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     source_channel: "mobile_banking",
     customer_id: `CUST-${Math.floor(100000000000 + Math.random() * 900000000000)}`,
+    created: new Date().toISOString(),
     original_feedback: "",
   });
 
@@ -27,10 +28,7 @@ export default function IngestPage() {
       const response = await fetch("/api/process-feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          created: new Date().toISOString(),
-        }),
+        body: JSON.stringify(form),
       });
 
       const result = await response.json();
@@ -39,6 +37,7 @@ export default function IngestPage() {
         setForm({ 
           ...form, 
           original_feedback: "", 
+          created: new Date().toISOString(),
           customer_id: `CUST-${Math.floor(100000000000 + Math.random() * 900000000000)}` 
         });
       } else {
@@ -55,9 +54,9 @@ export default function IngestPage() {
     <div className="max-w-2xl mx-auto py-10">
       <Card>
         <CardHeader>
-          <CardTitle>Ingest Feedback</CardTitle>
+          <CardTitle>Ingest Feedback Simulation (call ingest feedback API)</CardTitle>
           <CardDescription>
-            Simulate incoming customer feedback from various bank channels.
+            Simulate incoming customer feedback from various bank channels using the automated triage API.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -87,6 +86,18 @@ export default function IngestPage() {
                 <Label>Customer ID</Label>
                 <Input value={form.customer_id} readOnly className="bg-slate-50" />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-slate-400" /> Created (timestamp)
+              </Label>
+              <Input 
+                value={new Date(form.created).toLocaleString()} 
+                readOnly 
+                className="bg-slate-50"
+              />
+              <p className="text-[10px] text-slate-400">Captured at form load for simulation precision.</p>
             </div>
 
             <div className="space-y-2">
