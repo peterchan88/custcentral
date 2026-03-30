@@ -14,7 +14,7 @@ export default function IngestPage() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     source_channel: "mobile_banking",
-    customer_id: `CUST-${Math.floor(1000 + Math.random() * 9000)}`,
+    customer_id: `CUST-${Math.floor(100000000000 + Math.random() * 900000000000)}`,
     original_feedback: "",
   });
 
@@ -36,7 +36,11 @@ export default function IngestPage() {
       const result = await response.json();
       if (result.success) {
         toast.success("Feedback ingested and processed by AI");
-        setForm({ ...form, original_feedback: "", customer_id: `CUST-${Math.floor(1000 + Math.random() * 9000)}` });
+        setForm({ 
+          ...form, 
+          original_feedback: "", 
+          customer_id: `CUST-${Math.floor(100000000000 + Math.random() * 900000000000)}` 
+        });
       } else {
         throw new Error(result.error);
       }
