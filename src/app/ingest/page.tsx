@@ -13,7 +13,7 @@ import { Loader2, Send } from "lucide-react";
 export default function IngestPage() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
-    source_channel: "mobile_app",
+    source_channel: "mobile_banking",
     customer_id: `CUST-${Math.floor(1000 + Math.random() * 9000)}`,
     original_feedback: "",
   });
@@ -67,11 +67,15 @@ export default function IngestPage() {
                 >
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="mobile_app">Mobile App</SelectItem>
-                    <SelectItem value="web_banking">Web Banking</SelectItem>
-                    <SelectItem value="branch_kiosk">Branch Kiosk</SelectItem>
+                    <SelectItem value="branches">Branches</SelectItem>
+                    <SelectItem value="mobile_banking">Mobile Banking</SelectItem>
+                    <SelectItem value="internet_banking">Internet Banking</SelectItem>
+                    <SelectItem value="phone_banking">Phone Banking</SelectItem>
+                    <SelectItem value="call_centers">Call Centers</SelectItem>
+                    <SelectItem value="email_support">Email Support</SelectItem>
+                    <SelectItem value="regulators">Regulators</SelectItem>
                     <SelectItem value="social_media">Social Media</SelectItem>
-                    <SelectItem value="email">Email Support</SelectItem>
+                    <SelectItem value="mass_media">Mass Media</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
