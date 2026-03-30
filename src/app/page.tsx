@@ -6,8 +6,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { AlertCircle, CheckCircle, Clock, MessageSquare } from "lucide-react";
 
+interface ChartData {
+  name: string;
+  value: number;
+}
+
+interface StatsState {
+  total: number;
+  highSeverity: number;
+  needsReview: number;
+  sentimentData: ChartData[];
+  channelData: ChartData[];
+}
+
 export default function Dashboard() {
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<StatsState>({
     total: 0,
     highSeverity: 0,
     needsReview: 0,
@@ -25,12 +38,12 @@ export default function Dashboard() {
       const highSev = data.filter(f => f.severity >= 4).length;
       const needsRev = data.filter(f => f.status === 'New').length;
       
-      const sentiments = data.reduce((acc: any, f) => {
+      const sentiments = data.reduce((acc: Record<string, number>, f) => {
         acc[f.sentiment] = (acc[f.sentiment] || 0) + 1;
         return acc;
       }, {});
 
-      const channels = data.reduce((acc: any, f) => {
+      const channels = data.reduce((acc: Record<string, number>, f) => {
         acc[f.source_channel] = (acc[f.source_channel] || 0) + 1;
         return acc;
       }, {});
@@ -39,8 +52,8 @@ export default function Dashboard() {
         total: data.length,
         highSeverity: highSev,
         needsReview: needsRev,
-        sentimentData: Object.entries(sentiments).map(([name, value]) => ({ name, value })),
-        channelData: Object.entries(channels).map(([name, value]) => ({ name, value })),
+        sentimentData: Object.entries(sentiments).map(([name, value]) => ({ name, value: value as number })),
+        channelData: Object.entries(channels).map(([name, value]) => ({ name, value: value as number })),
       });
     }
   };
