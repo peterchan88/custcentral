@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { AlertCircle, History } from "lucide-react";
+import { History, Calendar } from "lucide-react";
 
 export const FeedbackDetailDrawer = ({ item, onClose, onUpdate }: any) => {
   const [formData, setFormData] = useState({ ...item });
@@ -29,7 +29,7 @@ export const FeedbackDetailDrawer = ({ item, onClose, onUpdate }: any) => {
         suggested_actions: formData.suggested_actions,
         action_taken: formData.action_taken,
         status: 'Reviewed',
-        updated_by: 'Internal Staff', // Mock user
+        updated_by: 'Internal Staff',
         updated_at: new Date().toISOString()
       })
       .eq('id', item.id);
@@ -44,18 +44,35 @@ export const FeedbackDetailDrawer = ({ item, onClose, onUpdate }: any) => {
     setLoading(false);
   };
 
+  const isDifferentLanguage = item.feedback_en && 
+    item.feedback_en.trim().toLowerCase() !== item.original_feedback.trim().toLowerCase();
+
   return (
     <Sheet open={true} onOpenChange={onClose}>
       <SheetContent className="sm:max-w-xl overflow-y-auto">
         <SheetHeader className="mb-6">
           <SheetTitle>Feedback Analysis Detail</SheetTitle>
-          <SheetDescription>Customer: {item.customer_id} | Confidence: {(item.confidence_score * 100).toFixed(0)}%</SheetDescription>
+          <div className="flex justify-between items-center text-sm text-muted-foreground">
+            <span>Customer: {item.customer_id} | Confidence: {(item.confidence_score * 100).toFixed(0)}%</span>
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3 h-3" /> Created: {new Date(item.created_at_source).toLocaleString()}
+            </span>
+          </div>
         </SheetHeader>
 
         <div className="space-y-6">
-          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-            <Label className="text-xs uppercase text-slate-500 font-bold">Original Feedback</Label>
-            <p className="mt-1 text-sm text-slate-700 leading-relaxed italic">"{item.original_feedback}"</p>
+          <div className="space-y-4">
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <Label className="text-xs uppercase text-slate-500 font-bold">Original Feedback</Label>
+              <p className="mt-1 text-sm text-slate-700 leading-relaxed italic">"{item.original_feedback}"</p>
+            </div>
+
+            {isDifferentLanguage && (
+              <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                <Label className="text-xs uppercase text-slate-500 font-bold">IN ENGLISH</Label>
+                <p className="mt-1 text-sm text-slate-700 leading-relaxed italic">"{item.feedback_en}"</p>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -82,21 +99,28 @@ export const FeedbackDetailDrawer = ({ item, onClose, onUpdate }: any) => {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label>Category</Label>
-            <Select value={formData.category} onValueChange={(v) => setFormData({...formData, category: v})}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="bug">Bug</SelectItem>
-                <SelectItem value="feature_request">Feature Request</SelectItem>
-                <SelectItem value="praise">Praise</SelectItem>
-                <SelectItem value="complaint">Complaint</SelectItem>
-                <SelectItem value="question">Question</SelectItem>
-                <SelectItem value="fraud">Fraud</SelectItem>
-                <SelectItem value="unclassified">Unclassified</SelectItem>
-                <SelectItem value="scam_detected">Scam Detected</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Source Channel</Label>
+              <Input value={formData.source_channel.replace('_', ' ')} readOnly className="bg-slate-50 capitalize" />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Category</Label>
+              <Select value={formData.category} onValueChange={(v) => setFormData({...formData, category: v})}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="bug">Bug</SelectItem>
+                  <SelectItem value="feature_request">Feature Request</SelectItem>
+                  <SelectItem value="praise">Praise</SelectItem>
+                  <SelectItem value="complaint">Complaint</SelectItem>
+                  <SelectItem value="question">Question</SelectItem>
+                  <SelectItem value="fraud">Fraud</SelectItem>
+                  <SelectItem value="unclassified">Unclassified</SelectItem>
+                  <SelectItem value="scam_detected">Scam Detected</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -143,7 +167,11 @@ export const FeedbackDetailDrawer = ({ item, onClose, onUpdate }: any) => {
             />
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex justify-center text-[10px] text-slate-400 font-medium">
+            Last Update: {new Date(formData.updated_at || formData.created_at).toLocaleString()}
+          </div>
+
+          <div className="flex gap-3 pt-2">
             <Button className="flex-1" onClick={handleSave} disabled={loading}>
               {loading ? "Saving..." : "Save Changes"}
             </Button>
