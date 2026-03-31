@@ -87,13 +87,14 @@ export const FeedbackDetailDrawer = ({ item, onClose, onUpdate }: any) => {
             <Select value={formData.category} onValueChange={(v) => setFormData({...formData, category: v})}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="praise">Praise</SelectItem>
                 <SelectItem value="bug">Bug</SelectItem>
                 <SelectItem value="feature_request">Feature Request</SelectItem>
+                <SelectItem value="praise">Praise</SelectItem>
                 <SelectItem value="complaint">Complaint</SelectItem>
+                <SelectItem value="question">Question</SelectItem>
                 <SelectItem value="fraud">Fraud</SelectItem>
-                <SelectItem value="scam_detected">Scam Detected</SelectItem>
                 <SelectItem value="unclassified">Unclassified</SelectItem>
+                <SelectItem value="scam_detected">Scam Detected</SelectItem>
               </SelectContent>
             </Select>
           </div>
