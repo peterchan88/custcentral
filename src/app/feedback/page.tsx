@@ -107,6 +107,7 @@ export default function FeedbackCentral() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-[80px]">Actions</TableHead>
               <SortableHeader label="Customer ID" sortKey="customer_id" />
               <SortableHeader label="Channel" sortKey="source_channel" />
               <SortableHeader label="Sentiment" sortKey="sentiment" />
@@ -116,12 +117,16 @@ export default function FeedbackCentral() {
               <SortableHeader label="Created" sortKey="created_at_source" />
               <SortableHeader label="Updated" sortKey="updated_at" />
               <TableHead className="w-[200px]">English Feedback</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredAndSorted.map((item) => (
               <TableRow key={item.id} className="group hover:bg-slate-50/50">
+                <TableCell>
+                  <Button variant="ghost" size="icon" onClick={() => setSelectedItem(item)} className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Eye className="w-4 h-4 text-blue-600" />
+                  </Button>
+                </TableCell>
                 <TableCell className="font-medium">{item.customer_id}</TableCell>
                 <TableCell className="capitalize text-slate-600">{item.source_channel?.replace('_', ' ')}</TableCell>
                 <TableCell>
@@ -149,11 +154,6 @@ export default function FeedbackCentral() {
                   <p className="text-xs text-slate-500 truncate" title={item.feedback_en}>
                     {item.feedback_en || '-'}
                   </p>
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button variant="ghost" size="icon" onClick={() => setSelectedItem(item)} className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Eye className="w-4 h-4 text-blue-600" />
-                  </Button>
                 </TableCell>
               </TableRow>
             ))}
