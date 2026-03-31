@@ -31,7 +31,7 @@ and respond ONLY with valid JSON in this exact format:
 "sentiment": "positive" or "negative" or "neutral" or "unclassified",
 "category": "bug" or "feature_request" or "praise" or "complaint" or "question" or "fraud" or "unclassified",
 "severity": 0-6 where 0 is unclassified 1 is minor 5 is critical and 6 is fraud,
-"assignee": "Relationship Manager" for onboarding, risk assessments, branch, sales, account related issues or "Product Team" for product features or gaps or "Technology" for system errors or downtime or "Compliance" or "Customer Experience & Operations",
+"assignee": "Relationship Manager" for onboarding, risk assessments, branch, sales, account related issues or "Product Team" for product features or gaps or "Technology" for system errors or downtime or "Compliance" for fraud or suspicious activity or "Customer Experience & Operations",
 "summary": "concise summary in 1 to 3 numbered bullet points max 250 characters no new line",
 "suggested_action": "concise recommended next step in 1 to 3 numbered bullet points max 250 characters no new line",
 "confidence_score": 0 to 1
