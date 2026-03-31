@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -52,11 +52,13 @@ export const FeedbackDetailDrawer = ({ item, onClose, onUpdate }: any) => {
       <SheetContent className="sm:max-w-xl overflow-y-auto">
         <SheetHeader className="mb-6">
           <SheetTitle>Feedback Analysis Detail</SheetTitle>
-          <div className="flex justify-between items-center text-sm text-muted-foreground">
-            <span>Customer: {item.customer_id} | Confidence: {(item.confidence_score * 100).toFixed(0)}%</span>
-            <span className="flex items-center gap-1">
+          <div className="flex justify-between items-center w-full border-b pb-2">
+            <div className="text-sm text-muted-foreground pr-4">
+              Customer: <span className="font-semibold text-slate-700">{item.customer_id}</span> | Confidence: <span className="font-semibold text-slate-700">{(item.confidence_score * 100).toFixed(0)}%</span>
+            </div>
+            <div className="flex items-center gap-1 text-[10px] text-slate-400 font-medium uppercase tracking-tight whitespace-nowrap">
               <Calendar className="w-3 h-3" /> Created: {new Date(item.created_at_source).toLocaleString()}
-            </span>
+            </div>
           </div>
         </SheetHeader>
 
@@ -167,7 +169,7 @@ export const FeedbackDetailDrawer = ({ item, onClose, onUpdate }: any) => {
             />
           </div>
 
-          <div className="flex justify-center text-[10px] text-slate-400 font-medium">
+          <div className="flex justify-center text-[10px] text-slate-400 font-medium uppercase tracking-tight">
             Last Update: {new Date(formData.updated_at || formData.created_at).toLocaleString()}
           </div>
 
