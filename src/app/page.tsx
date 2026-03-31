@@ -39,12 +39,20 @@ export default function Dashboard() {
       const needsRev = data.filter(f => f.status === 'New').length;
       
       const sentiments = data.reduce((acc: Record<string, number>, f) => {
-        acc[f.sentiment] = (acc[f.sentiment] || 0) + 1;
+        const key = f.sentiment || 'Unclassified';
+        acc[key] = (acc[key] || 0) + 1;
         return acc;
       }, {});
 
       const channels = data.reduce((acc: Record<string, number>, f) => {
-        acc[f.source_channel] = (acc[f.source_channel] || 0) + 1;
+        // Format channel name for display (e.g., mobile_banking -> Mobile Banking)
+        const rawName = f.source_channel || 'unknown';
+        const formattedName = rawName
+          .split('_')
+          .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+          
+        acc[formattedName] = (acc[formattedName] || 0) + 1;
         return acc;
       }, {});
 
@@ -95,10 +103,25 @@ export default function Dashboard() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stats.channelData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                <XAxis 
+                  dataKey="name" 
+                  fontSize={12} 
+                  tickLine={false} 
+                  axisLine={false}
+                />
+                <YAxis 
+                  fontSize={12} 
+                  tickLine={false} 
+                  axisLine={false} 
+                  tickFormatter={(value) => `${value}`}
+                />
+                <Tooltip cursor={{fill: 'transparent'}} />
+                <Bar 
+                  dataKey="value" 
+                  fill="#3b82f6" 
+                  radius={[4, 4, 0, 0]} 
+                  barSize={40}
+                />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
