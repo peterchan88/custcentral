@@ -40,6 +40,7 @@ export default function FeedbackCentral() {
 
   const filteredAndSorted = useMemo(() => {
     let result = [...feedback].filter(f => 
+      (f.id?.toLowerCase() || "").includes(search.toLowerCase()) ||
       (f.customer_id?.toLowerCase() || "").includes(search.toLowerCase()) ||
       (f.original_feedback?.toLowerCase() || "").includes(search.toLowerCase()) ||
       (f.feedback_en?.toLowerCase() || "").includes(search.toLowerCase())
@@ -108,6 +109,7 @@ export default function FeedbackCentral() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[80px]">Actions</TableHead>
+              <SortableHeader label="ID" sortKey="id" />
               <SortableHeader label="Customer ID" sortKey="customer_id" />
               <SortableHeader label="Channel" sortKey="source_channel" />
               <SortableHeader label="Sentiment" sortKey="sentiment" />
@@ -126,6 +128,9 @@ export default function FeedbackCentral() {
                   <Button variant="ghost" size="icon" onClick={() => setSelectedItem(item)} className="opacity-0 group-hover:opacity-100 transition-opacity">
                     <Eye className="w-4 h-4 text-blue-600" />
                   </Button>
+                </TableCell>
+                <TableCell className="font-mono text-[10px] max-w-[80px] truncate" title={item.id}>
+                  {item.id}
                 </TableCell>
                 <TableCell className="font-medium">{item.customer_id}</TableCell>
                 <TableCell className="capitalize text-slate-600">{item.source_channel?.replace('_', ' ')}</TableCell>

@@ -44,7 +44,7 @@ export default function IngestPage() {
         throw new Error(result.error);
       }
     } catch (error) {
-      toast.error("Processing failed. Please check your API configuration.");
+      toast.error("Processing failed due to AI error. Please retry after a while.");
     } finally {
       setLoading(false);
     }
