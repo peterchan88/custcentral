@@ -18,22 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 function AppContent({ children }: { children: React.ReactNode }) {
-  const { session, loading } = useAuth();
+  const { session } = useAuth();
   const pathname = usePathname();
   const isLoginPage = pathname === "/login";
-
-  // Prevent flash of protected content while loading or if unauthenticated
-  if (loading) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center bg-slate-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  if (!session && !isLoginPage) {
-    return null;
-  }
 
   return (
     <div className="flex h-screen bg-slate-50 w-full">
