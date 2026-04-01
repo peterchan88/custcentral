@@ -45,7 +45,6 @@ export default function Dashboard() {
       }, {});
 
       const channels = data.reduce((acc: Record<string, number>, f) => {
-        // Format channel name for display (e.g., mobile_banking -> Mobile Banking)
         const rawName = f.source_channel || 'unknown';
         const formattedName = rawName
           .split('_')
@@ -85,7 +84,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader><CardTitle className="text-lg">Sentiment Distribution</CardTitle></CardHeader>
-          <CardContent className="h-[300px]">
+          <CardContent className="h-[350px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={stats.sentimentData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
@@ -99,29 +98,35 @@ export default function Dashboard() {
 
         <Card>
           <CardHeader><CardTitle className="text-lg">Volume by Channel</CardTitle></CardHeader>
-          <CardContent className="h-[300px]">
+          <CardContent className="h-[350px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={stats.channelData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <BarChart 
+                data={stats.channelData} 
+                layout="vertical"
+                margin={{ left: 20, right: 30 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
                 <XAxis 
-                  dataKey="name" 
-                  fontSize={12} 
-                  tickLine={false} 
-                  axisLine={false}
-                />
-                <YAxis 
+                  type="number"
                   fontSize={12} 
                   tickLine={false} 
                   axisLine={false} 
                   allowDecimals={false}
-                  tickFormatter={(value) => `${value}`}
+                />
+                <YAxis 
+                  dataKey="name"
+                  type="category"
+                  fontSize={12} 
+                  tickLine={false} 
+                  axisLine={false} 
+                  width={120}
                 />
                 <Tooltip cursor={{fill: 'transparent'}} />
                 <Bar 
                   dataKey="value" 
                   fill="#3b82f6" 
-                  radius={[4, 4, 0, 0]} 
-                  barSize={40}
+                  radius={[0, 4, 4, 0]} 
+                  barSize={20}
                 />
               </BarChart>
             </ResponsiveContainer>
