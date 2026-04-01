@@ -78,6 +78,7 @@ export async function POST(req: Request) {
       );
     }
 
+    // Use JSON.stringify to ensure user input is properly escaped
     const inputData = JSON.stringify({
       created,
       customer_id,
@@ -92,7 +93,6 @@ export async function POST(req: Request) {
     const { data, error } = await supabase
       .from('feedback')
       .insert([{
-        user_id: user.id, // Track who ingested the feedback
         source_channel,
         created_at_source: new Date(created).toISOString(),
         customer_id,
