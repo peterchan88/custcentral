@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
-import { createServerClient } from '@supabase/ssr'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
 // Initialize Gemini
@@ -22,26 +22,13 @@ export async function POST(req: Request) {
       }
     )
 
-    // SECURE: Use getUser() to verify the identity of the requester server-side.
-    // This re-validates the JWT and ensures the user is legitimately logged in.
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
-    if (authError || !user) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized access detected." }, 
-        { status: 401 }
-      );
+    // Verify session
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
     const { source_channel, created, customer_id, original_feedback } = await req.json();
-
-    // PROTECTION: Prevent credit drain by limiting the amount of text sent to the AI.
-    if (!original_feedback || original_feedback.length > 2000) {
-      return NextResponse.json(
-        { success: false, error: "Feedback content is missing or too large for processing." }, 
-        { status: 400 }
-      );
-    }
 
     const prompt = `You are a customer feedback analyst for a major global Bank X.
 
@@ -113,6 +100,6 @@ Avoid biased or sensitive inference. Fair / unbiased triage.`;
     return NextResponse.json({ success: true, data });
   } catch (error: any) {
     console.error("Processing error:", error);
-    return NextResponse.json({ success: false, error: "Internal server error during processing." }, { status: 500 });
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
