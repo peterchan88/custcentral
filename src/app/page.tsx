@@ -113,6 +113,7 @@ export default function Dashboard() {
                   fontSize={12} 
                   tickLine={false} 
                   axisLine={false} 
+                  allowDecimals={false}
                   tickFormatter={(value) => `${value}`}
                 />
                 <Tooltip cursor={{fill: 'transparent'}} />
