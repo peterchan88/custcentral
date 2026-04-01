@@ -39,12 +39,23 @@ export default function FeedbackCentral() {
   };
 
   const filteredAndSorted = useMemo(() => {
-    let result = [...feedback].filter(f => 
-      (f.id?.toLowerCase() || "").includes(search.toLowerCase()) ||
-      (f.customer_id?.toLowerCase() || "").includes(search.toLowerCase()) ||
-      (f.original_feedback?.toLowerCase() || "").includes(search.toLowerCase()) ||
-      (f.feedback_en?.toLowerCase() || "").includes(search.toLowerCase())
-    );
+    let result = [...feedback].filter(f => {
+      const searchTerm = search.toLowerCase();
+      return (
+        (f.id?.toLowerCase() || "").includes(searchTerm) ||
+        (f.customer_id?.toLowerCase() || "").includes(searchTerm) ||
+        (f.source_channel?.toLowerCase() || "").includes(searchTerm) ||
+        (f.sentiment?.toLowerCase() || "").includes(searchTerm) ||
+        (f.category?.toLowerCase() || "").includes(searchTerm) ||
+        (f.status?.toLowerCase() || "").includes(searchTerm) ||
+        (f.assignee?.toLowerCase() || "").includes(searchTerm) ||
+        (f.summary?.toLowerCase() || "").includes(searchTerm) ||
+        (f.suggested_actions?.toLowerCase() || "").includes(searchTerm) ||
+        (f.action_taken?.toLowerCase() || "").includes(searchTerm) ||
+        (f.original_feedback?.toLowerCase() || "").includes(searchTerm) ||
+        (f.feedback_en?.toLowerCase() || "").includes(searchTerm)
+      );
+    });
 
     if (sortConfig) {
       result.sort((a, b) => {
