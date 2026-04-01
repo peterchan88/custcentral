@@ -1,13 +1,33 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
-import { supabase } from "@/integrations/supabase/client";
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
-// Initialize Gemini (using environment variable or placeholder for now)
+// Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
 export async function POST(req: Request) {
   try {
+    const cookieStore = await cookies()
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value
+          },
+        },
+      }
+    )
+
+    // Verify session
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
+
     const { source_channel, created, customer_id, original_feedback } = await req.json();
 
     const prompt = `You are a customer feedback analyst for a major global Bank X.
@@ -54,7 +74,7 @@ Avoid biased or sensitive inference. Fair / unbiased triage.`;
     const responseText = result.response.text().replace(/```json/g, "").replace(/```/g, "").trim();
     const analysis = JSON.parse(responseText);
 
-    // Save to Supabase
+    // Save to Supabase using the authenticated client
     const { data, error } = await supabase
       .from('feedback')
       .insert([{
